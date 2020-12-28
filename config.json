@@ -1,0 +1,13 @@
+[{
+  "rss": "https://podkast.nrk.no/program/p2-serier.rss",
+  "categories": {
+    "Sammen med Sandvik": {
+      "regex": "^Sammen med Sandvik:",
+      "directory":  "./podcasts/sammen"
+    },
+    "Norgeshistorie": {
+      "regex": "^Norgeshistorie:",
+      "directory":  "./podcasts/norgeshistorie"
+    }
+  }
+}]
