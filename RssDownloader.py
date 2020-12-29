@@ -38,22 +38,23 @@ class RssDownloader():
     }
 
     def __init__(self, debug=False):
-        with open('config.json', 'r') as f:
+        current_dir = os.path.dirname(os.path.realpath(__file__))
+        with open(os.path.join(current_dir, 'config.json'), 'r') as f:
             self.config = json.load(f)
             try:
                 validate(instance=self.config, schema=self.config_schema)
             except ValidationError as e:
-                logging.error(f'Config is invalid: ${e}')
+                logging.error(f'Config is invalid: {e}')
 
         log_level = logging.DEBUG if debug else logging.ERROR
-        logging.basicConfig(filename='debug.log', level=log_level)
+        logging.basicConfig(filename=os.path.join(current_dir, 'debug.log'), level=log_level)
 
     def readFeeds(self):
         for feed in self.config:
-            logging.debug(f"Loading feed: ${feed['rss']}")
+            logging.debug(f"Loading feed: {feed['rss']}")
             req = requests.get(feed['rss'])
             if req.status_code != 200:
-                logging.error(f"Could not load RSS feed: ${feed['rss']}")
+                logging.error(f"Could not load RSS feed: {feed['rss']}")
                 continue
             xmlsoup = BeautifulSoup(req.content, 'xml')
             self.parseItems(xmlsoup, feed)
@@ -64,7 +65,7 @@ class RssDownloader():
         items = list(filter(None, map(self.get_title_and_link, itemsoup)))
 
         for name, rules in feed['categories'].items():
-            logging.debug(f'Parsing category: ${name}')
+            logging.debug(f'Parsing category: {name}')
             processed_items = []
             for i, item in enumerate(items):
                 if item is None:
@@ -94,18 +95,18 @@ class RssDownloader():
         filename = self.get_filename(info_req)
         full_path = os.path.join(directory, filename)
         if os.path.exists(full_path):
-            logging.debug(f'File already downloaded: ${filename}')
+            logging.debug(f'File already downloaded: {filename}')
             return
 
         try:
             dl_req = requests.get(link)
         except requests.exceptions.ConnectionError:
-            logging.error(f'Could not download file: ${link}')
+            logging.error(f'Could not download file: {link}')
             return
     
         with open(full_path, 'wb') as f:
             f.write(dl_req.content)
-        logging.debug(f'File downloaded: ${filename}')
+        logging.debug(f'File downloaded: {filename}')
 
     def get_filename(self, req):
         url_name = req.url.split('/')[-1]
@@ -129,7 +130,7 @@ class RssDownloader():
             return enclosure.attrs['url']
 
         logging.error(
-            f"Could not extract download link for ${soup_item.find('title').get_text()}"
+            f"Could not extract download link for {soup_item.find('title').get_text()}"
         )
         raise AttributeError
 
