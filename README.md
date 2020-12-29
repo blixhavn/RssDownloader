@@ -51,6 +51,8 @@ In linux, the easiest way to schedule this is using crontab. In a terminal, writ
 
 [Crontab.guru](https://crontab.guru/) is helpful for writing the scheduling pattern.
 
+For Windows, I assume Windows Scheduler can be used.
+
 ### Troubleshooting
 
 If the script isn't working as intended, check the `debug.log` file for errors. You can also run the script with a `--debug` flag for more verbose information.
