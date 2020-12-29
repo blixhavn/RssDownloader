@@ -39,6 +39,8 @@ The configuration is written as a list of JSON objects, with each object contain
         }
     }]
 
+**Note**: The regex matching is case insensitive.
+
 The category names are not used for anything in particular at the moment, other than debug messages.
 
 ### Scheduling
